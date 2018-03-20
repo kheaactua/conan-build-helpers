@@ -1,7 +1,6 @@
-# -*- coding: latin-1 -*-
-
 import os, re, platform
 
+# TODO rename this function to toUnixPath
 def adjustPath(path):
     """
     If on windows, convert unix paths to Windows.  Note, this function is quite
@@ -10,10 +9,11 @@ def adjustPath(path):
     CMake and pkg-config.
     """
 
+    newpath = path
     if 'Windows' == platform.system():
-        return re.sub(r'\\', r'/', path)
-    else:
-        return path
+        newpath = re.sub(r'\\', r'/', path)
+
+    return newpath
 
 def joinPaths(paths):
     """
@@ -22,7 +22,7 @@ def joinPaths(paths):
 
     if isinstance(paths, list):
         return (';' if 'Windows' == platform.system() else ':').join(paths)
-    else
+    else:
         return paths
 
 def splitPaths(paths):
@@ -44,12 +44,13 @@ def appendPkgConfigPath(paths, env_obj):
                    pkg_config), or a dict (usually when called from build)
     """
 
+    # Convert our paaths to a list
+    if isinstance(paths, str):
+        paths = splitPaths(paths)
+
     # Make sure we keep the default path
     if 'PKG_CONFIG_PATH' in os.environ:
-        if isinstance(paths, list):
-            paths += splitPaths(os.environ['PKG_CONFIG_PATH'])
-        else:
-            paths = splitPaths(paths) + splitPaths(os.environ['PKG_CONFIG_PATH'])
+        paths += splitPaths(os.environ['PKG_CONFIG_PATH'])
 
     # Remove duplicates
     paths = remove_duplicates_keep_order(paths)
@@ -70,4 +71,4 @@ def remove_duplicates_keep_order(seq):
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
 
-# vim: ts=4 sw=4 expandtab ffs=unix ft=python fileencoding=latin1 foldmethod=marker :
+# vim: ts=4 sw=4 expandtab ffs=unix ft=python foldmethod=marker :
