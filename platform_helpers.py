@@ -20,7 +20,10 @@ def joinPaths(paths):
     Join paths with a ':' on *nix systems, or a ';' on Windows systems
     """
 
-    return (';' if 'Windows' == platform.system() else ':').join(paths)
+    if isinstance(paths, list):
+        return (';' if 'Windows' == platform.system() else ':').join(paths)
+    else
+        return paths
 
 def splitPaths(paths):
     """
