@@ -3,7 +3,7 @@ from conans import ConanFile
 
 class HelpersConan(ConanFile):
     name        = 'helpers'
-    version     = '0.1'
+    version     = '0.2'
     license     = 'MIT'
     description = 'Helper functions for conan'
     exports     = '*'
