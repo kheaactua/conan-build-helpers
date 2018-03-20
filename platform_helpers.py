@@ -58,7 +58,7 @@ def appendPkgConfigPath(paths, env_obj):
         # can't check isinstance
         env_obj.PKG_CONFIG_PATH = paths
     else:
-        raise ValueError('Unsure of how to use provided environment object.')
+        raise ValueError('Unsure of how to use provided environment object, type=%s'%str(type(env_obj)))
 
 
 def remove_duplicates_keep_order(seq):
