@@ -1,6 +1,6 @@
 import os, re, platform
 
-# TODO rename this function to toUnixPath
+# TODO rename this function to toUnixPath, or see if I can replace this with https://github.com/conan-io/conan/blob/1afadb5cca9e1c688c7b37c69a0ff3c6a6dbe257/conans/client/build/compiler_flags.py
 def adjustPath(path):
     """
     If on windows, convert unix paths to Windows.  Note, this function is quite
@@ -18,6 +18,8 @@ def adjustPath(path):
 def joinPaths(paths):
     """
     Join paths with a ':' on *nix systems, or a ';' on Windows systems
+
+    # TODO This function can likely be deleted.
     """
 
     if isinstance(paths, list):
