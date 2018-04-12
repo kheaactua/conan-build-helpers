@@ -27,13 +27,6 @@ def joinPaths(paths):
     else:
         return paths
 
-def splitPaths(paths):
-    """
-    Splits paths with a ':' on *nix systems, or a ';' on Windows systems
-    """
-
-    return paths.split(';' if 'Windows' == platform.system() else ':')
-
 def appendPkgConfigPath(paths, env_obj):
     """
     Append to the a conan's virtual environments pkg config path by taking the
@@ -72,5 +65,28 @@ def remove_duplicates_keep_order(seq):
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
+
+
+def check_hash(file_path, hash_file, fnc=None):
+    """
+    Some vendors provide a file full of hashes, this function takes that as
+    an input and performs the check.
+
+    @param file_path File to confirm the hash
+    @param hash_file File with a list (columns: hash, filename) of hashes
+    @param algorithm_function For md5, use tools.check_md5, etc.
+    """
+
+    with open(hash_file, 'r') as f: contents = f.read()
+
+    fname = os.path.basename(file_path)
+    hash_str = ''
+    m = re.search(r'(?P<hash>\w+)\s+(?P<archive>%s)'%fname, contents)
+    if m:
+        hash_str = m.group('hash')
+    else:
+        raise ValueError('Could not find a hash for %s in %s'%(fname, hash_file))
+
+    return fnc(file_path=file_path, signature=hash_str)
 
 # vim: ts=4 sw=4 expandtab ffs=unix ft=python foldmethod=marker :
