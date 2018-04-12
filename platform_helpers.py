@@ -27,6 +27,13 @@ def joinPaths(paths):
     else:
         return paths
 
+def splitPaths(paths):
+    """
+    Splits paths with a ':' on *nix systems, or a ';' on Windows systems
+    """
+
+    return paths.split(';' if 'Windows' == platform.system() else ':')
+
 def appendPkgConfigPath(paths, env_obj):
     """
     Append to the a conan's virtual environments pkg config path by taking the
