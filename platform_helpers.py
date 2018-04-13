@@ -96,4 +96,29 @@ def check_hash(file_path, hash_file, fnc=None):
 
     return fnc(file_path=file_path, signature=hash_str)
 
+def which(program):
+    """
+    Locate a command.
+
+    Originally found in conan-qt script, and also at https://stackoverflow.com/a/377028/1861346
+    """
+    def is_exe(fpath):
+        """
+        Check if a path is executable.
+        """
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, _ = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
 # vim: ts=4 sw=4 expandtab ffs=unix ft=python foldmethod=marker :
