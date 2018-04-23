@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os, shutil
 
 def wrapCMakeFile(source_folder, output_func=print, custom_cmakefile=None):

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os, re, platform
 
 # TODO rename this function to toUnixPath, or see if I can replace this with https://github.com/conan-io/conan/blob/1afadb5cca9e1c688c7b37c69a0ff3c6a6dbe257/conans/client/build/compiler_flags.py
