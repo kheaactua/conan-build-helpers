@@ -99,11 +99,12 @@ def check_hash(file_path, hash_file, fnc=None):
 
     return fnc(file_path=file_path, signature=hash_str)
 
-def which(program):
+def which(program, additional_paths=[]):
     """
     Locate a command.
 
-    Originally found in conan-qt script, and also at https://stackoverflow.com/a/377028/1861346
+    Originally found in conan-qt script, and also at
+    https://stackoverflow.com/a/377028/1861346 , then locally modified.
     """
     def is_exe(fpath):
         """
@@ -116,9 +117,13 @@ def which(program):
         if is_exe(program):
             return program
     else:
-        for path in os.environ["PATH"].split(os.pathsep):
+        paths = os.environ["PATH"].split(os.pathsep) + additional_paths
+        for path in paths:
             path = path.strip('"')
             exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+            exe_file = os.path.join(path, program + '.exe')
             if is_exe(exe_file):
                 return exe_file
 
