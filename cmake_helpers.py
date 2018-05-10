@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import os, shutil
+
 
 def wrapCMakeFile(source_folder, output_func=print, custom_cmakefile=None):
     """
