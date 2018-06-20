@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import os, re, platform
 
 # TODO rename this function to toUnixPath, or see if I can replace this with https://github.com/conan-io/conan/blob/1afadb5cca9e1c688c7b37c69a0ff3c6a6dbe257/conans/client/build/compiler_flags.py
@@ -69,13 +70,11 @@ def appendPkgConfigPath(paths, env_obj):
     else:
         raise ValueError('Unsure of how to use provided environment object, type=%s'%str(type(env_obj)))
 
-
 def remove_duplicates_keep_order(seq):
     """ Source: https://stackoverflow.com/a/480227/1861346 """
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
-
 
 def check_hash(file_path, hash_file, fnc=None):
     """
@@ -126,6 +125,46 @@ def which(program, additional_paths=[]):
             exe_file = os.path.join(path, program + '.exe')
             if is_exe(exe_file):
                 return exe_file
+
+    return None
+
+def load_ccache_into_env(env, conan, output_func=print):
+    """ Attempt to load ccache (or clcache) into the environment. """
+
+    if 'Windows' == conan.settings.os:
+        # Passing until clcache is properly integrated.
+        pass
+
+        # clcache = self.find_clcache()
+        # if clcache:
+        #     if not 'CXX' in os.environ:
+        #         env['CXX'] = clcache
+        #     if not 'CC' in os.environ:
+        #         env['CC']  = clcache
+    else:
+        if which('ccache'):
+            compiler = os.environ.get('CXX', 'g++')
+            output_func('Implementing ccache')
+            if not 'CXX' in os.environ:
+                env['CXX'] = 'ccache %s'%compiler
+            if not 'CC' in os.environ:
+                env['CC']  = 'ccache %s'%conan.settings.compiler
+
+def find_clcache(self):
+    """ Attempt to locate clcache on the system, and return its path """
+
+    from platform_helpers import which
+    search_names = ['clcache', 'clcache.4.1.0']
+    search_locations = [
+        os.path.join(r'c:\\', 'Windows', 'System32', 'clcache.4.1.0'),
+        os.path.join('c:\\', 'Windows', 'System32', 'clcache.4.1.0', 'clcache-4.1.0'),
+        os.path.join(os.environ.get('USERPROFILE', r'c:\\Users\\jenkins'), 'bin'),
+    ]
+    for n in search_names:
+        for l in search_locations:
+            p = which(n, search_locations)
+            if p and os.path.exists(p) and os.path.isfile(p):
+                return p
 
     return None
 
