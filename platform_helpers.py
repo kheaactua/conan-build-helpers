@@ -90,7 +90,7 @@ def check_hash(file_path, hash_file, fnc=None):
 
     fname = os.path.basename(file_path)
     hash_str = ''
-    m = re.search(r'(?P<hash>\w+)\s+(?P<archive>%s)'%fname, contents)
+    m = re.search(r'(?P<hash>\w+)\s+\W*(?P<archive>%s)'%fname, contents)
     if m:
         hash_str = m.group('hash')
     else:
@@ -135,7 +135,7 @@ def load_ccache_into_env(env, conan, output_func=print):
         # Passing until clcache is properly integrated.
         pass
 
-        # clcache = self.find_clcache()
+        # clcache = find_clcache()
         # if clcache:
         #     if not 'CXX' in os.environ:
         #         env['CXX'] = clcache
