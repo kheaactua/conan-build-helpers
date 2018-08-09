@@ -121,10 +121,10 @@ def which(program, additional_paths=[]):
             path = path.strip('"')
             exe_file = os.path.join(path, program)
             if is_exe(exe_file):
-                return exe_file
+                return os.path.realpath(exe_file)
             exe_file = os.path.join(path, program + '.exe')
             if is_exe(exe_file):
-                return exe_file
+                return os.path.realpath(exe_file)
 
     return None
 
