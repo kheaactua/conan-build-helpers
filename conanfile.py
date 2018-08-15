@@ -15,6 +15,7 @@ class HelpersConan(ConanFile):
 
     def package(self):
         self.copy('*helpers.py')
+        self.copy('source_cache.py')
 
     def package_info(self):
         self.env_info.PYTHONPATH.append(self.package_folder)
