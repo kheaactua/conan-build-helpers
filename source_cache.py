@@ -27,7 +27,10 @@ def copyFromCache(filename, dst=None, cache_dir = None, output_func=print):
         dst = filename
 
     if is_url(cache_dir):
-        path = cache_dir + '/' + filename
+        path = ''
+        if cache_dir:
+            path = str(cache_dir) + '/'
+        path += filename
 
         from conans import tools
         from conans.errors import ConanException
