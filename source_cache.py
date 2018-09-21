@@ -52,5 +52,4 @@ def copyFromCache(filename, dst=None, cache_dir = None, output_func=print):
             output_func('Warning: no file "%s" found in %s'%(filename, cache_dir))
             return False
 
-
 # vim: ts=4 sw=4 expandtab ffs=unix ft=python foldmethod=marker :
