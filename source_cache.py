@@ -22,6 +22,9 @@ def copyFromCache(filename, dst=None, cache_dir = None, output_func=print):
 
     if cache_dir is None:
         output_func('Warning: No source cache directory set, please manually set or use the CONAN_SOURCE_CACHE_DIR environment variable')
+        if os.path.basename(filename) == filename and not os.path.exists(filename):
+            # No chance of finding this without CONAN_SOURCE_CACHE_DIR
+            return False
 
     if dst is None:
         dst = filename
