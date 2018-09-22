@@ -70,11 +70,42 @@ def appendPkgConfigPath(paths, env_obj):
     else:
         raise ValueError('Unsure of how to use provided environment object, type=%s'%str(type(env_obj)))
 
+def prependPkgConfigPath(paths, env_obj):
+    appendPkgConfigPath(paths, env_obj)
+
 def remove_duplicates_keep_order(seq):
     """ Source: https://stackoverflow.com/a/480227/1861346 """
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
+
+def reorderPkgConfigPath(paths, conan):
+    """ Place the system paths last.  This is required because
+    having a pkg-config build requirement zeros out the default
+    pkg-config path, so we put it back in, but then it seems to
+    place system paths first"""
+
+    was_str = False
+    if type(paths) is str:
+        was_str = True
+        from platform_helpers import splitPaths
+        paths = splitPaths(paths)
+
+    def comp(a, b):
+        if 'conan' in a and 'conan' in b:
+            return 0
+        elif 'conan' in a:
+            return -1
+        elif 'conan' in b:
+            return -1
+        else:
+            return 1
+    from functools import cmp_to_key
+    paths=sorted(paths, key=cmp_to_key(comp))
+
+    if was_str:
+        paths = (';' if 'Windows' == conan.settings.os else ':').join(paths)
+    return paths
 
 def check_hash(file_path, hash_file, fnc=None):
     """
