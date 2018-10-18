@@ -61,6 +61,10 @@ def appendPkgConfigPath(paths, env_obj):
     # Remove duplicates
     paths = remove_duplicates_keep_order(paths)
 
+    # Remove empty paths
+    while '' in paths:
+        paths.remove('')
+
     if isinstance(env_obj, dict):
         env_obj['PKG_CONFIG_PATH'] = paths
     elif re.search('conans.model.env_info.EnvInfo', str(type(env_obj))):
