@@ -38,7 +38,7 @@ def splitPaths(paths):
 
     return paths.split(';' if 'Windows' == platform.system() else ':')
 
-def appendPkgConfigPath(paths, env_obj):
+def appendPkgConfigPath(paths, env_obj, is_windows=False):
     """
     Append to the a conan's virtual environments pkg config path by taking the
     current environment's pkg-config path into consideration
@@ -61,9 +61,8 @@ def appendPkgConfigPath(paths, env_obj):
     # Remove duplicates
     paths = remove_duplicates_keep_order(paths)
 
-    # Remove empty paths
-    while '' in paths:
-        paths.remove('')
+    # Place the conan paths first
+    paths = reorderPkgConfigPath(paths, is_windows)
 
     if isinstance(env_obj, dict):
         env_obj['PKG_CONFIG_PATH'] = paths
@@ -74,8 +73,8 @@ def appendPkgConfigPath(paths, env_obj):
     else:
         raise ValueError('Unsure of how to use provided environment object, type=%s'%str(type(env_obj)))
 
-def prependPkgConfigPath(paths, env_obj):
-    appendPkgConfigPath(paths, env_obj)
+def prependPkgConfigPath(paths, env_obj, is_windows=False):
+    appendPkgConfigPath(paths, env_obj, is_windows)
 
 def remove_duplicates_keep_order(seq):
     """ Source: https://stackoverflow.com/a/480227/1861346 """
