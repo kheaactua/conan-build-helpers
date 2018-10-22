@@ -95,17 +95,10 @@ def reorderPkgConfigPath(paths, is_windows=False):
         from platform_helpers import splitPaths
         paths = splitPaths(paths)
 
-    def comp(a, b):
-        if 'conan' in a and 'conan' in b:
-            return 0
-        elif 'conan' in a:
-            return -1
-        elif 'conan' in b:
-            return -1
-        else:
-            return 1
-    from functools import cmp_to_key
-    paths=sorted(paths, key=cmp_to_key(comp))
+    def put_conan_first(k):
+        p = 'a' if 'conan' in k else 'z'
+        return '%s_%s'%(p,k)
+    paths=sorted(paths, key=put_conan_first)
 
     if was_str:
         paths = (';' if 'Windows' == is_windows else ':').join(paths)
