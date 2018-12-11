@@ -58,11 +58,12 @@ if(NOT "${ADDITIONAL_DEFINITIONS}" STREQUAL "")
     message(STATUS "Defining: ${ADDITIONAL_DEFINITIONS}")
 endif()
 
-include("%s")
 '''%(adjustPath(wrapped_cmake_file))
 
     if additional_cmds is not None:
         new_cmake_contents += "\n%s"%additional_cmds
+
+    new_cmake_contents = '\n\n# Include original CMakeLists.txt file\ninclude("%s")'
 
     output_func('Writting wrapper CMakeLists.txt file to %s which will include %s'%(orig_cmake_file, wrapped_cmake_file))
     with open(orig_cmake_file, 'w') as f: f.write(new_cmake_contents)
