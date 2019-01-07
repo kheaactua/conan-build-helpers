@@ -36,7 +36,9 @@ def splitPaths(paths):
     Splits paths with a ':' on *nix systems, or a ';' on Windows systems
     """
 
-    return paths.split(';' if 'Windows' == platform.system() else ':')
+    path_list = paths.split(';' if 'Windows' == platform.system() else ':')
+    path_list = list(filter(None, path_list))
+    return path_list
 
 def appendPkgConfigPath(paths, env_obj, is_windows=False):
     """
@@ -51,7 +53,7 @@ def appendPkgConfigPath(paths, env_obj, is_windows=False):
     """
 
     # Convert our paaths to a list
-    if isinstance(paths, str):
+    if isinstance(paths, str) or isinstance(paths, unicode):
         paths = splitPaths(paths)
 
     # Make sure we keep the default path
